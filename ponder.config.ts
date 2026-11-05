@@ -1,5 +1,5 @@
 import { createConfig } from 'ponder';
-import { base, mainnet } from 'viem/chains';
+import { mainnet /*, base */ } from 'viem/chains';
 import { Address, http } from 'viem';
 import { morphoBlueABI } from './abis/morphoBlueABI';
 
@@ -13,6 +13,7 @@ const rpc = (chainId: number, alchemySlug: string) =>
 const maxRequestsPerSecond = parseInt(process.env.MAX_REQUESTS_PER_SECOND || '50');
 const pollingInterval = parseInt(process.env.POLLING_INTERVAL_MS || '5000');
 
+// Base is disabled for now: uncomment the three `base` blocks (+ import) to re-enable.
 // To index another chain: add an entry here, a `chains` entry below and a `morphoBlue.chain` entry.
 export const config = {
 	[mainnet.id]: {
@@ -20,11 +21,11 @@ export const config = {
 		morphoBlue: MORPHO_BLUE,
 		startBlock: 18883124, // Morpho Blue deployment block
 	},
-	[base.id]: {
-		rpc: rpc(base.id, 'base-mainnet'),
-		morphoBlue: MORPHO_BLUE,
-		startBlock: 13977148, // Morpho Blue deployment block
-	},
+	// [base.id]: {
+	// 	rpc: rpc(base.id, 'base-mainnet'),
+	// 	morphoBlue: MORPHO_BLUE,
+	// 	startBlock: 13977148, // Morpho Blue deployment block
+	// },
 };
 
 export default createConfig({
@@ -35,19 +36,19 @@ export default createConfig({
 			pollingInterval,
 			rpc: http(config[mainnet.id].rpc),
 		},
-		[base.name]: {
-			id: base.id,
-			maxRequestsPerSecond,
-			pollingInterval,
-			rpc: http(config[base.id].rpc),
-		},
+		// [base.name]: {
+		// 	id: base.id,
+		// 	maxRequestsPerSecond,
+		// 	pollingInterval,
+		// 	rpc: http(config[base.id].rpc),
+		// },
 	},
 	contracts: {
 		morphoBlue: {
 			abi: morphoBlueABI,
 			chain: {
 				[mainnet.name]: { address: config[mainnet.id].morphoBlue, startBlock: config[mainnet.id].startBlock },
-				[base.name]: { address: config[base.id].morphoBlue, startBlock: config[base.id].startBlock },
+				// [base.name]: { address: config[base.id].morphoBlue, startBlock: config[base.id].startBlock },
 			},
 		},
 	},

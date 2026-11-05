@@ -1,6 +1,6 @@
 # morpho-indexer
 
-Event indexer for [Morpho Blue](https://docs.morpho.org/) (singleton `0xBBBB…FFCb`, Ethereum + Base). Rebuilds the full state of **every market** from events — no per-event RPC reads — so all markets can be filtered by TVL, utilization, rates, LLTV, activity, bad debt etc. for arbitrage / cheap-borrow hunting.
+Event indexer for [Morpho Blue](https://docs.morpho.org/) (singleton `0xBBBB…FFCb`, Ethereum; Base is commented out in `ponder.config.ts`). Rebuilds the full state of **every market** from events — no per-event RPC reads — so all markets can be filtered by TVL, utilization, rates, LLTV, activity, bad debt etc. for arbitrage / cheap-borrow hunting.
 
 Built with [Ponder](https://ponder.sh), modeled after `ysyBold-indexer`.
 
@@ -43,4 +43,4 @@ Units: `*Units` are in **loan-token units** (1500 = 1500 USDC), `utilization` / 
 
 - `borrowApy` / `supplyApy` come from the rate emitted by the last `AccrueInterest`, i.e. the rate **before** the last interaction. For idle markets (Morpho's adaptive IRM keeps drifting) it is stale — check `lastUpdate`. A live read of `IRM.borrowRateView` is the natural next step.
 - Amounts are not USD-normalised; compare within the same loan token, or add a price feed.
-- Start blocks (`18883124` Ethereum, `13977148` Base) are the documented Morpho Blue deployments.
+- Start blocks (`18883124` Ethereum) are the documented Morpho Blue deployments.
