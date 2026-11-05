@@ -140,7 +140,7 @@
     </div>
     <div class="row">
       <label><input type="checkbox" id="hideEmpty" checked /> Hide markets with no supply</label>
-      <label><input type="checkbox" id="onlyBorrowable" /> Only borrowable (liquidity &gt; 0)</label>
+      <label><input type="checkbox" id="onlyBorrowable" /> Only borrowable (liquidity &gt; $1)</label>
       <label><input type="checkbox" id="onlyBadDebt" /> Had bad debt</label>
       <span style="flex:1"></span>
       <button class="mini" data-preset="cheap">Preset: cheap &amp; liquid</button>
@@ -208,10 +208,8 @@
     ['sfrxETH', '0xac3E018457B222d93114458476f3E3416Abbe38F', 'staked', 'eth', 1.1],
     ['osETH', '0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38', 'staked', 'eth', 1.05],
     ['pufETH', '0xD9A442856C234a39a81a089C06451EBAa4306a72', 'staked', 'eth', 1.05],
-    // no collateral
-    ['IDLE', '0x0000000000000000000000000000000000000000', 'other', null],
   ];
-  var GROUPS = [['stable', 'Stable'], ['btc', 'BTC'], ['eth', 'ETH'], ['staked', 'Staked'], ['other', 'Other']];
+  var GROUPS = [['stable', 'Stable'], ['btc', 'BTC'], ['eth', 'ETH'], ['staked', 'Staked']];
   var KNOWN = {}; // lowercase address -> {sym, group, ref, factor}
   TOKENS.forEach(function (t) { KNOWN[t[1].toLowerCase()] = { sym: t[0], group: t[2], ref: t[3], factor: t[4] || 1 }; });
 
@@ -275,7 +273,7 @@
   function renderChips(container, sel, side) {
     container.textContent = '';
     GROUPS.forEach(function (g) {
-      var toks = TOKENS.filter(function (t) { return t[2] === g[0] && (side === 'coll' || t[0] !== 'IDLE'); });
+      var toks = TOKENS.filter(function (t) { return t[2] === g[0] && true; });
       if (!toks.length) return;
       var row = el('div', { class: 'group' }, [el('span', { class: 'gl', text: g[1] })]);
       toks.forEach(function (t) {
@@ -369,14 +367,16 @@
     };
   }
 
+  var ZERO = '0x0000000000000000000000000000000000000000';
   function passes(m) {
+    if (m.collateralToken === ZERO) return false; // idle markets (no collateral) are never relevant here
     var known = $('knownOnly').checked;
     var ls = Object.keys(state.loanSel), cs = Object.keys(state.collSel);
     if (ls.length ? !state.loanSel[m.loanToken] : (known && !m.loanKnown)) return false;
     if (cs.length ? !state.collSel[m.collateralToken] : (known && !m.collKnown)) return false;
 
     if ($('hideEmpty').checked && !(m.supplyUnits > 0)) return false;
-    if ($('onlyBorrowable').checked && !(m.liquidityUnits > 0)) return false;
+    if ($('onlyBorrowable').checked && !(m.liqUsd > 1)) return false;
     if ($('onlyBadDebt').checked && !m.badDebt) return false;
 
     var v;
