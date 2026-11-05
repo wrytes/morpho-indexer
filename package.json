@@ -1,0 +1,35 @@
+{
+	"name": "@wrytes/morpho-indexer",
+	"version": "0.0.1",
+	"private": false,
+	"license": "GPL-3.0",
+	"scripts": {
+		"dev": "ponder dev --disable-ui",
+		"dev:ui": "ponder dev",
+		"start": "ponder start",
+		"db": "ponder db",
+		"codegen": "ponder codegen",
+		"lint": "eslint .",
+		"typecheck": "tsc",
+		"format": "prettier --write ."
+	},
+	"keywords": [],
+	"dependencies": {
+		"hono": "^4.6.14",
+		"ponder": "^0.17.5",
+		"viem": "^2.35.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.9.0",
+		"@typescript-eslint/eslint-plugin": "^6.3.0",
+		"@typescript-eslint/parser": "^6.3.0",
+		"eslint": "^8.53.0",
+		"eslint-config-ponder": "^0.17.5",
+		"prettier": "^2.8.8",
+		"tsx": "^4.21.0",
+		"typescript": "^5.4.0"
+	},
+	"engines": {
+		"node": ">=22"
+	}
+}
